@@ -1,14 +1,18 @@
 # Badminton-Scoreboard
 Badminton scoreboard build using Arduino UNO and MAX7219
 
-Used libraries:<br>
-  -LedControl.h<br>
-  -LiquidCrystal_I2C.h<br>
-  -wire.h<br>
+<b>Used libraries:</b>
+<ul>
+  <li>LedControl.h</li>
+  <li>LiquidCrystal_I2C.h</li>
+  <li>wire.h</li>
+</ul>
 
-Program designed for:<br>
-  -Arduino UNO<br>
-  -LCD i2c 1602 display<br>
-  -5 pushbuttons<br>
-  -6 - 7 segment common cathode displays<br>
-  -MAX 7219 chip
+<b>Program designed for:</b>
+<ul>
+  <li>Arduino UNO</li>
+  <li>LCD i2c 1602 display</li>
+  <li>5 pushbuttons</li>
+  <li>6 - 7 segment common cathode displays</li>
+  <li>MAX 7219 chip</li>
+</ul>
