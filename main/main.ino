@@ -45,9 +45,6 @@ int side = 0;
 int LeftDigit;
 int RightDigit;
 
-//startup variable
-int startup = 0;
-
 //Switches pin connection to Arduino
 #define AddScore1 2   //player 1
 #define AddScore2 3   //player 2 
@@ -130,17 +127,18 @@ void setup() {
 
   //on 7 segment display
   //displaying numbers 0-9
-    for(startup = 0; startup <= 9; startup++){
-      lc.setDigit(0,0,startup,false); //left set count
-      lc.setDigit(0,1,startup,false); //left score
-      lc.setDigit(0,2,startup,false); //left score
-      lc.setDigit(0,3,startup,false); //right score
-      lc.setDigit(0,4,startup,false); // right score
-      lc.setDigit(0,5,startup,false); // right set count
+    for(ptk1 = 0; ptk1 <= 9; ptk1++){
+      lc.setDigit(0,0,ptk1,false); //left set count
+      lc.setDigit(0,1,ptk1,false); //left score
+      lc.setDigit(0,2,ptk1,false); //left score
+      lc.setDigit(0,3,ptk1,false); //right score
+      lc.setDigit(0,4,ptk1,false); // right score
+      lc.setDigit(0,5,ptk1,false); // right set count
       delay(400);
     }
 
-  //after startup
+  //after 
+    ptk1 = 0;
     interface();
     ScorePrint();
     
@@ -196,7 +194,7 @@ void loop() {
     }
 
   //When Player 1 won set
-    if(ptk1 >= 21 && ptk1 - ptk2 >= 2){
+    if(ptk1 >= 21 && ptk1 - ptk2 >= 2 || ptk1 = 30){
       s1 = s1 + 1;
       ptk1 = 0;
       ptk2 = 0;
@@ -211,7 +209,7 @@ void loop() {
     }
 
   //When Player 2 won set
-    if(ptk2 >= 21 && ptk2 - ptk1 >= 2){
+    if(ptk2 >= 21 && ptk2 - ptk1 >= 2 || ptk2 = 30){
       s2 = s2 + 1;
       ptk1 = 0;
       ptk2 = 0;
@@ -222,5 +220,6 @@ void loop() {
       }
       delay(10000);
       interface();
+      ScorePrint();
     }
 }
