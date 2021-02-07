@@ -194,7 +194,7 @@ void loop() {
     }
 
   //When Player 1 won set
-    if(ptk1 >= 21 && ptk1 - ptk2 >= 2 || ptk1 = 30){
+    if(ptk1 >= 21 && ptk1 - ptk2 >= 2 || ptk1 == 30){
       s1 = s1 + 1;
       ptk1 = 0;
       ptk2 = 0;
@@ -209,7 +209,7 @@ void loop() {
     }
 
   //When Player 2 won set
-    if(ptk2 >= 21 && ptk2 - ptk1 >= 2 || ptk2 = 30){
+    if(ptk2 >= 21 && ptk2 - ptk1 >= 2 || ptk2 == 30){
       s2 = s2 + 1;
       ptk1 = 0;
       ptk2 = 0;
