@@ -36,5 +36,5 @@ If you don't have Fritzing and you can't open diagrams and schematics here are s
 
 ![image](https://user-images.githubusercontent.com/72706877/136065706-bce70d8e-55e9-4f0f-8e08-8efeb21c8c29.png)
 
+![image](https://user-images.githubusercontent.com/72706877/137393297-3661a87d-24f1-421b-bd42-43eee341c2d6.png)
 
-There are no schematics yet
