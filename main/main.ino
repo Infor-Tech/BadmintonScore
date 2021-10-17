@@ -41,13 +41,13 @@ LiquidCrystal_I2C lcd(0x27, 20, 4);
 
 //score variables
 //Players score
-int points_of_1st_player = 0, points_of_2nd_player = 0;
+byte points_of_1st_player = 0, points_of_2nd_player = 0;
 //Players sets won
-int sets_of_1st_player = 0, sets_of_2nd_player = 0;
+byte sets_of_1st_player = 0, sets_of_2nd_player = 0;
 
 //variable defining on which side are players
-//when value equals 0 -> player 1 is on a left side
-int side = 0;
+//when value equals false -> player 1 is on a left side
+bool side;
 
 //displaying all data on LCD
 void display_judge_interface()
@@ -70,13 +70,13 @@ void display_judge_interface()
 //On deafult Player 1 is on left side
 void display_score_on_a_scoreboard()
 {
-    int temp = 0;
-    int scores[2], sets[2];
+    byte temp = 0;
+    byte scores[2], sets[2];
     
-    //variables used to split whole number in half
-    int left_digit, right_digit;
+    //variables used to split whole number in half, so that it could be displayed on 7 segment displays
+    byte left_digit, right_digit;
     
-    if (side == 0)
+    if (!side)
     {
         scores[0] = points_of_1st_player;
         sets[0] = sets_of_1st_player;
@@ -91,12 +91,10 @@ void display_score_on_a_scoreboard()
         sets[1] = sets_of_1st_player;
     }
 
-    for (int i = 0; i < 2; i++)
+    for (byte i = 0; i < 2; i++)
     {
         right_digit = scores[i] % 10;
         left_digit = scores[i] % 100 / 10;
-        
-        temp += i;
 
         lc.setDigit(0, temp + 1, left_digit, false);
         lc.setDigit(0, temp + 2, right_digit, false);
@@ -105,12 +103,13 @@ void display_score_on_a_scoreboard()
         else
             lc.setDigit(0, 5, sets[i], false);
         
-        temp++;
+        temp = 2;
     }
 }
 
 //Checks if button is pressed, and if so, it runs specific action
-void get_button_state(const int button_pin, const int action){
+void get_button_state(const byte button_pin, const byte action)
+{
     if(!digitalRead(button_pin)){
         switch(action)
         {
@@ -128,7 +127,7 @@ void get_button_state(const int button_pin, const int action){
                 points_of_1st_player = points_of_2nd_player = sets_of_1st_player = sets_of_2nd_player = side = 0;
                 break;
             case 5:
-                side = side == 0 ? 1 : 0;
+                side = !side;
                 break;
             default:
                 break;
@@ -142,7 +141,8 @@ void get_button_state(const int button_pin, const int action){
     }
 }
 
-void check_if_set_is_won(int score_of_supposed_winner, int score_of_opponent){
+void check_if_set_is_won(byte score_of_supposed_winner, byte score_of_opponent)
+{
     if ((score_of_supposed_winner >= 21 && score_of_supposed_winner - score_of_opponent >= 2) || score_of_supposed_winner == 30)
     {
         if(score_of_supposed_winner == points_of_1st_player)
@@ -152,7 +152,7 @@ void check_if_set_is_won(int score_of_supposed_winner, int score_of_opponent){
 
         points_of_1st_player = points_of_2nd_player = 0;
 
-        side = side == 0 ? 1 : 0;
+        side = !side;
 
         display_judge_interface();
         display_score_on_a_scoreboard();
@@ -184,9 +184,9 @@ void setup()
     lcd.print("Infor-Tech");
 
     //displaying numbers 0-9 on 7 segment displays
-    for (int i = 0; i <= 9; i++)
+    for (byte i = 0; i <= 9; i++)
     {
-        for (int j = 0; j <= 5; j++)
+        for (byte j = 0; j <= 5; j++)
             lc.setDigit(0, j, i, false);
         delay(400);
     }
@@ -198,7 +198,7 @@ void setup()
 
 void loop()
 {
-    //When side=0 on 7 segment displays player 1 is on a left
+    //When side=false on 7 segment displays player 1 is on a left
     get_button_state(CHANGE_SIDES, 5);
 
     //When ADD_SCORE_FOR_THE_1ST_PLAYER pressed there is added point for Player1 on lcd and 7 segment display
