@@ -11,23 +11,17 @@
  *      
  *  fritzing project with schematics avaiable
  *    
- *  Features:
- *      -score reset without restarting arduino
- *      -changing sides by pressing a button
- *      -judge display
- *    
  *  Author: KRYSTIAN SLIWINSKI
- *  Contact: kskrystiansliwniski@gmail.com
+ *  Contact: k.sliwinski@protonmail.com
  *  github: https://github.com/Infor-Tech
  */
 
 //MAX7219 connection and setup to Arduino
 //LedControl(DIN, CLK, LOAD, number of MAX7219 chips)
 #include "LedControl.h"
-LedControl lc = LedControl(12, 10, 11, 1);
+LedControl scoreboard = LedControl(12, 10, 11, 1);
 
-//Setup of the LCD
-//Set the LCD address to 0x27 for a 1602 display
+//1602LCD setup (I2C address: 0x27)
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x27, 20, 4);
@@ -67,7 +61,6 @@ void display_judge_interface()
 }
 
 //Displaying score on 7 segment displays depends on side variable
-//On deafult Player 1 is on left side
 void display_score_on_a_scoreboard()
 {
     byte temp = 0;
@@ -93,21 +86,14 @@ void display_score_on_a_scoreboard()
 
     for (byte i = 0; i < 2; i++)
     {
-        right_digit = scores[i] % 10;
-        left_digit = scores[i] % 100 / 10;
-
-        lc.setDigit(0, temp + 1, left_digit, false);
-        lc.setDigit(0, temp + 2, right_digit, false);
-        if(temp == 0)
-            lc.setDigit(0, 0, sets[i], false);
-        else
-            lc.setDigit(0, 5, sets[i], false);
-        
+        scoreboard.setDigit(0, temp + 1, scores[i] % 100 / 10, false);  //left digit
+        scoreboard.setDigit(0, temp + 2, scores[i] % 10, false);        //right digit
+        scoreboard.setDigit(0, temp == 0 ? 0 : 5, sets[i], false);
         temp = 2;
     }
 }
 
-//Checks if button is pressed, and if so, it runs specific action
+//Checks if button is pressed, and if so, it runs a specific action
 void get_button_state(const byte button_pin, const byte action)
 {
     if(!digitalRead(button_pin)){
@@ -115,9 +101,11 @@ void get_button_state(const byte button_pin, const byte action)
         {
             case 1:
                 points_of_1st_player++;
+                check_if_set_is_won(&points_of_1st_player, &points_of_2nd_player, &sets_of_1st_player);
                 break;
             case 2:
                 points_of_2nd_player++;
+                check_if_set_is_won(&points_of_2nd_player, &points_of_1st_player, &sets_of_2nd_player);
                 break;
             case 3:
                 points_of_1st_player -= 1;
@@ -129,8 +117,6 @@ void get_button_state(const byte button_pin, const byte action)
             case 5:
                 side = !side;
                 break;
-            default:
-                break;
         }
         display_judge_interface();
         display_score_on_a_scoreboard();
@@ -141,19 +127,13 @@ void get_button_state(const byte button_pin, const byte action)
     }
 }
 
-void check_if_set_is_won(byte score_of_supposed_winner, byte score_of_opponent)
+void check_if_set_is_won(byte* score_of_supposed_winner, byte* score_of_opponent, byte* set_score_of_supposed_winner)
 {
-    if ((score_of_supposed_winner >= 21 && score_of_supposed_winner - score_of_opponent >= 2) || score_of_supposed_winner == 30)
+    if ((*score_of_supposed_winner >= 21 && *score_of_supposed_winner - *score_of_opponent >= 2) || *score_of_supposed_winner == 30)
     {
-        if(score_of_supposed_winner == points_of_1st_player)
-            sets_of_1st_player++;
-        else
-            sets_of_2nd_player++;
-
+        *set_score_of_supposed_winner++;
         points_of_1st_player = points_of_2nd_player = 0;
-
         side = !side;
-
         display_judge_interface();
         display_score_on_a_scoreboard();
         delay(10000);
@@ -169,14 +149,12 @@ void setup()
     pinMode(CHANGE_SIDES, INPUT_PULLUP);
     pinMode(RESET_SCORE, INPUT_PULLUP);
 
-    //initialize the lcd
     lcd.init();
     lcd.backlight();
 
-    //initialize MAX7219
-    lc.shutdown(0, false); //Turn on MAX7219
-    lc.setIntensity(0, 7); //Set brightness
-    lc.clearDisplay(0);    //Clear all displays connected to MAX7219
+    scoreboard.shutdown(0, false); //Turn on MAX7219
+    scoreboard.setIntensity(0, 7);
+    scoreboard.clearDisplay(0);
 
     //startup screen
     lcd.print("   github.com/");
@@ -187,7 +165,7 @@ void setup()
     for (byte i = 0; i <= 9; i++)
     {
         for (byte j = 0; j <= 5; j++)
-            lc.setDigit(0, j, i, false);
+            scoreboard.setDigit(0, j, i, false);
         delay(400);
     }
 
@@ -198,24 +176,9 @@ void setup()
 
 void loop()
 {
-    //When side=false on 7 segment displays player 1 is on a left
     get_button_state(CHANGE_SIDES, 5);
-
-    //When ADD_SCORE_FOR_THE_1ST_PLAYER pressed there is added point for Player1 on lcd and 7 segment display
     get_button_state(ADD_SCORE_FOR_THE_1ST_PLAYER, 1);
-
-    //When ADD_SCORE_FOR_THE_2ND_PLAYER pressed there is added point for Player 2 on lcd and 7 segment display
     get_button_state(ADD_SCORE_FOR_THE_2ND_PLAYER, 2);
-
-    //Reset scoreboard
     get_button_state(RESET_SCORE, 4);
-
-    //Subtract point from both players
     get_button_state(SUB_POINT_FROM_PLAYERS, 3);
-
-    //When Player 1 won set
-    check_if_set_is_won(points_of_1st_player, points_of_2nd_player);
-
-    //When Player 2 won set
-    check_if_set_is_won(points_of_2nd_player, points_of_1st_player);
 }
