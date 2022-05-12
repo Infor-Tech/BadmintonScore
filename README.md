@@ -1,8 +1,8 @@
-# Badminton-Scoreboard
+# BadmintonScore
 
 Badminton scoreboard build using Arduino UNO and MAX7219
 
-___
+---
 
 ### What such device should do:
 
@@ -10,7 +10,7 @@ ___
 - Display the score on its display
 - Change sides after each set or after 11th point of 3rd set
 
-___
+---
 
 ### Parts needed for this project
 
@@ -20,7 +20,7 @@ ___
 - 6 - 7 segment common cathode displays
 - MAX 7219 chip
 
-___
+---
 
 ### Used libraries:
 
@@ -28,7 +28,7 @@ ___
 - Wire.h (https://www.arduino.cc/en/reference/wire)
 - LiquidCrystal_I2C.h (https://www.arduino.cc/reference/en/libraries/liquidcrystal-i2c/)
 
-___
+---
 
 ### Diagrams and Schematics
 
@@ -37,4 +37,3 @@ If you don't have Fritzing and you can't open diagrams and schematics here are s
 ![image](https://user-images.githubusercontent.com/72706877/136065706-bce70d8e-55e9-4f0f-8e08-8efeb21c8c29.png)
 
 ![image](https://user-images.githubusercontent.com/72706877/137393297-3661a87d-24f1-421b-bd42-43eee341c2d6.png)
-

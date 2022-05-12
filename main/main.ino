@@ -1,19 +1,20 @@
-/*  Badminton scoreboard
+/**
+ * @file main.ino
+ * @author Krystian Śliwiński (k.sliwinski@protonmail.com)
+ * @brief BadmintonScore, Electronic badminton scoreboard
+ * @version 0.5
+ * @date 2022-05-12
  *
- *  Github repo: https://github.com/Infor-Tech/Badminton-Scoreboard
+ * @copyright Copyright (c) 2022 Krystian Śliwiński, under MIT license.
  *
- *  Parts used in this project:
+ * Parts used in this project:
  *      -Arduino UNO
  *      -LCD i2c 1602 display
  *      -5 pushbuttons
  *      -6 - 7 segment common cathode displays
  *      -MAX 7219 chip
  *
- *  fritzing project with schematics avaiable
- *
- *  Author: KRYSTIAN SLIWINSKI
- *  Contact: k.sliwinski@protonmail.com
- *  github: https://github.com/Infor-Tech
+ *  github: https://github.com/Infor-Tech/BadmintonScore
  */
 
 // MAX7219; LedControl(DIN, CLK, LOAD, number of MAX7219 chips)
