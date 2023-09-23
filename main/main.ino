@@ -117,10 +117,10 @@ void get_button_state(const byte button_pin)
  *  @param set_score_of_player When check is passed, this variable is incremented */
 void add_point_and_check_score(byte *score_of_player, byte *score_of_opponent, byte *set_score_of_player)
 {
-    *score_of_player++;
+    *score_of_player += 1;
     if ((*score_of_player >= 21 && *score_of_player - *score_of_opponent >= 2) || *score_of_player == 30)
     {
-        *set_score_of_player++;
+        *set_score_of_player += 1;
         points_of_1st_player = points_of_2nd_player = 0;
         side = !side;
         display_score();
